@@ -36,12 +36,12 @@ def scientific_to_lilypond(note):
     primes = abs(octave - 3)
     return pitch_class + primes * ("," if octave < 3 else "'")
 
-strings = [('e', 2), ('a', 2), ('d', 3), ('g', 3), ('b', 3), ('e', 4)]
+strings = [('e', 4), ('b', 3), ('g', 3), ('d', 3), ('a', 2), ('e', 2)]
 print('\\version "2.18.2" { \\clef "treble_8"')
 for measure in range(100):
     string = random.randrange(len(strings))
     fret = random.randrange(15)
     candidates = spellings(move_up(integer_notation(strings[string]), fret))
     note = scientific_to_lilypond(random.choice(list(candidates)))
-    print(note + '1^"' + str(6 - string) + '"')
+    print(note + '1^"' + str(string + 1) + '"')
 print('}')
