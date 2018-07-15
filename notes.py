@@ -24,7 +24,7 @@ def spelling(note, shift):
         letter = classes_to_letters[pitch_class]
         return letter + abs(shift) * ('is' if shift < 0 else 'es'), octave
 
-max_accidentals = 2
+max_accidentals = 1
 shift_range = list(range(-max_accidentals, max_accidentals + 1))
 
 def spellings(note):
