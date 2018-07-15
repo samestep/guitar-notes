@@ -24,8 +24,11 @@ def spelling(note, shift):
         letter = classes_to_letters[pitch_class]
         return letter + abs(shift) * ('is' if shift < 0 else 'es'), octave
 
+max_accidentals = 2
+shift_range = list(range(-max_accidentals, max_accidentals + 1))
+
 def spellings(note):
-    unfiltered = (spelling(note, shift) for shift in range(-2, 2 + 1))
+    unfiltered = (spelling(note, shift) for shift in shift_range)
     return set(candidate for candidate in unfiltered if candidate is not None)
 
 def scientific_to_lilypond(note):
