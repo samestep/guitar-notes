@@ -37,7 +37,7 @@ strings = [('e', 2), ('a', 2), ('d', 3), ('g', 3), ('b', 3), ('e', 4)]
 print('\\version "2.18.2" { \\clef "treble_8"')
 for measure in range(100):
     string = random.randrange(len(strings))
-    fret = random.randrange(21)
+    fret = random.randrange(15)
     candidates = spellings(move_up(integer_notation(strings[string]), fret))
     note = scientific_to_lilypond(random.choice(list(candidates)))
     print(note + '1^"' + str(6 - string) + '"')
