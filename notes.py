@@ -42,24 +42,16 @@ def fretboard(strings):
     def f(pair):
         string, fret = pair
         return move_up(integer_notation(string), fret)
-    return collections.Counter(map(f, itertools.product(strings, range(15))))
+    return collections.Counter(map(f, itertools.product(strings, range(14))))
 
 def fill_measure(notes):
-    inner = lambda duration: ' '.join(note + str(duration) for note in notes)
-    duration = 1
-    while duration < len(notes):
-        duration *= 2
-    if duration == len(notes):
-        return inner(duration) + ' |'
-    else:
-        duration //= 2
-        params = (len(notes), duration, inner(duration))
-        return '\\tuplet %s/%s { %s } |' % params
+    duration = {1: '2.', 2: '4.', 3: '4'}[len(notes)]
+    return ' '.join(note + str(duration) for note in notes) + ' |'
 
 strings = [('e', 4), ('b', 3), ('g', 3), ('d', 3), ('a', 2), ('e', 2)]
 board = fretboard(strings)
 
-print('\\version "2.18.2" { \\clef "treble_8"')
+print('\\version "2.18.2" { \\clef "treble_8" \\time 3/4')
 for measure in range(100):
     note = random.choice(list(board.keys()))
     count = board[note]
