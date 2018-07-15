@@ -1,3 +1,5 @@
+import collections
+import itertools
 import random
 
 def normalize(note):
@@ -36,12 +38,31 @@ def scientific_to_lilypond(note):
     primes = abs(octave - 3)
     return pitch_class + primes * ("," if octave < 3 else "'")
 
+def fretboard(strings):
+    def f(pair):
+        string, fret = pair
+        return move_up(integer_notation(string), fret)
+    return collections.Counter(map(f, itertools.product(strings, range(15))))
+
+def fill_measure(notes):
+    inner = lambda duration: ' '.join(note + str(duration) for note in notes)
+    duration = 1
+    while duration < len(notes):
+        duration *= 2
+    if duration == len(notes):
+        return inner(duration) + ' |'
+    else:
+        duration //= 2
+        params = (len(notes), duration, inner(duration))
+        return '\\tuplet %s/%s { %s } |' % params
+
 strings = [('e', 4), ('b', 3), ('g', 3), ('d', 3), ('a', 2), ('e', 2)]
+board = fretboard(strings)
+
 print('\\version "2.18.2" { \\clef "treble_8"')
 for measure in range(100):
-    string = random.randrange(len(strings))
-    fret = random.randrange(15)
-    candidates = spellings(move_up(integer_notation(strings[string]), fret))
-    note = scientific_to_lilypond(random.choice(list(candidates)))
-    print(note + '1^"' + str(string + 1) + '"')
+    note = random.choice(list(board.keys()))
+    count = board[note]
+    spell = random.choice(list(spellings(note)))
+    print(fill_measure(count * [scientific_to_lilypond(spell)]))
 print('}')
